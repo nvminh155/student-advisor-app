@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "331906216455",
+    "project_id": "student-advisor-app-75a11",
+    "storage_bucket": "student-advisor-app-75a11.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331906216455:android:898e183dc7b97aad2570a2",
+        "android_client_info": {
+          "package_name": "com.studentAdvisorApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD860MBEw6s5NvK79RNCdPWR-T1UvQGvFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
