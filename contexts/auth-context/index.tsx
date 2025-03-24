@@ -13,6 +13,8 @@ import * as Google from "expo-auth-session/providers/google";
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth, db } from "@/firebase";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
+import { AuthSessionResult } from "expo-auth-session/build/AuthSession.types";
+import { TokenResponse } from "expo-auth-session/build/TokenRequest";
 
 type User = {
   uid: string;
@@ -21,10 +23,13 @@ type User = {
   photoURL: string | null;
 };
 
+type TSession = TokenResponse | null;
+
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   error: string | null;
+  session: TSession;
   signIn: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<void>;
@@ -34,18 +39,23 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const config = {
+  androidClientId:
+    "331906216455-ag0uacki4of520v2peqvuet0h8r2ifn7.apps.googleusercontent.com",
+  scopes: ["profile", "email", "openid"],
+};
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [session, setSession] = useState<TSession>(null);
 
   // Replace with your Google OAuth client ID
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: "YOUR_ANDROID_CLIENT_ID",
-    iosClientId: "YOUR_IOS_CLIENT_ID",
-    webClientId: "YOUR_WEB_CLIENT_ID",
+  const [request, response, promptAsync] = Google.useAuthRequest(config, {
+    scheme: "myapp",
+    path: "/(main)",
   });
 
   useEffect(() => {
@@ -59,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           displayName: firebaseUser.displayName,
           photoURL: firebaseUser.photoURL,
         };
-
+        console.log("userData", firebaseUser);
         setUser(userData);
 
         // Check if user exists in Firestore, if not create a new document
@@ -87,11 +97,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (response?.type === "success") {
+      setSession(response.authentication);
       const { id_token } = response.params;
+
       const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential).catch((error: any) => {
-        setError(error.message);
-      });
+      signInWithCredential(auth, credential)
+        .catch((error: any) => {
+          setError(error.message);
+        });
     }
   }, [response]);
 
@@ -109,7 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } else if (error.code === "auth/invalid-email") {
         errorMessage = "Invalid email format";
       }
-      console.error('err', error)
+      console.error("err", error);
       setError(errorMessage);
       throw error;
     } finally {
@@ -188,6 +201,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         user,
         isLoading,
         error,
+        session,
         signIn,
         signInWithGoogle,
         signUp,

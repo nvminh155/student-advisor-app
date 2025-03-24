@@ -21,28 +21,39 @@ import {
   useToast,
 } from "@/components/ui/toast";
 
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { useAuth } from "@/contexts/auth-context";
 
-
 import { auth } from "@/firebase";
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
-import * as GoogleAuthProvider from 'firebase/auth';
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+import * as GoogleAuthProvider from "firebase/auth";
 
 WebBrowser.maybeCompleteAuthSession();
 
+const config = {
+  androidClientId:
+    "331906216455-ag0uacki4of520v2peqvuet0h8r2ifn7.apps.googleusercontent.com",
+  scopes: ["profile", "email", "openid"],
+};
 
 export default function LoginScreen() {
   const router = useRouter();
   const { signIn, signInWithGoogle, isLoading, error, clearError } = useAuth();
   const toast = useToast();
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: '331906216455-ihtpkum65rbdn4l3e927j0b3sklr5cau.apps.googleusercontent.com',
-    androidClientId: '331906216455-vg6ai1ev6p2aavim27ca9579eh68deoc.apps.googleusercontent.com',
-    iosClientId: '331906216455-aldbo3s2g57pj9vkel1t6nih99p0bjbh.apps.googleusercontent.com',
+  const [request, response, promptAsync] = Google.useAuthRequest(config, {
+    scheme: "myapp",
+    path: "/(main)",
   });
+  // const redirectUri = makeRedirectUri({
+  //   scheme: 'my-scheme',
+  //   path: 'redirect'
+  // });
+  // Development Build: my-scheme://redirect
+  // Expo Go: exp://127.0.0.1:8081/--/redirect
+  // Web dev: https://localhost:19006/redirect
+  // Web prod: https://yourwebsite.com/redirect
 
   const [email, setEmail] = useState("minhnv155@gnail.com");
   const [password, setPassword] = useState("88888888");
@@ -84,22 +95,23 @@ export default function LoginScreen() {
     } catch (error) {}
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignIn = async () => {
     try {
-      
+      await signInWithGoogle();
     } catch (error) {}
   };
 
-  useEffect(() => {
-    if (response?.type === 'success') {
-      const { id_token } = response.authentication;
-      const credential = GoogleAuthProvider.GoogleAuthProvider.credential(id_token);
-      GoogleAuthProvider.signInWithCredential(auth, credential)
-        .then((userCredential) => {
-          console.log(userCredential.user);
-        })
-        .catch(error => console.error(error));
+  const handleToken = () => {
+    if (response?.type === "success") {
+      const { authentication } = response;
+      const token = authentication?.accessToken;
+      console.log("access token = ", token);
+      console.log("authentication token = ", authentication);
     }
+  };
+
+  useEffect(() => {
+    handleToken();
   }, [response]);
 
   return (
@@ -167,7 +179,7 @@ export default function LoginScreen() {
         <Button
           variant="outline"
           onPress={() => {
-            promptAsync();
+            signInWithGoogle();
           }}
           disabled={isLoading}
           className="border border-primary-500"

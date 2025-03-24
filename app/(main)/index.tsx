@@ -10,8 +10,11 @@ import { Icon, SearchIcon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function AIAdvisorScreen() {
+  const { session } = useAuth();
+  console.log('sessin', session);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     {
