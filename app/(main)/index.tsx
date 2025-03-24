@@ -10,11 +10,13 @@ import { Icon, SearchIcon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { dkmhTdmuService } from "@/service/dkmhTdmuService";
 import { useAuth } from "@/contexts/auth-context";
+import { Button, ButtonText } from "@/components/ui/button";
 
 export default function AIAdvisorScreen() {
   const { session } = useAuth();
-  console.log('sessin', session);
+
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     {
@@ -31,6 +33,17 @@ export default function AIAdvisorScreen() {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
   }, [messages]);
+
+  const handleLoginDKMH = async () => {
+    const res = await dkmhTdmuService.tkbtuanhocky(
+      session?.sessionDKMH.access_token ?? ""
+    );
+    console.log("res", res);
+  };
+
+  useEffect(() => {
+    handleLoginDKMH();
+  }, []);
 
   const handleSend = () => {
     if (input.trim() === "") return;
@@ -115,6 +128,10 @@ export default function AIAdvisorScreen() {
                 </Text>
               </Box>
             ))}
+
+            <Button onPress={handleLoginDKMH} className="bg-primary-500">
+              <ButtonText>Sign in DKMH</ButtonText>
+            </Button>
           </ScrollView>
 
           <HStack className="p-4 gap-3 items-center border-t border-borderLight200 bg-white">

@@ -42,10 +42,6 @@ export default function LoginScreen() {
   const { signIn, signInWithGoogle, isLoading, error, clearError } = useAuth();
   const toast = useToast();
 
-  const [request, response, promptAsync] = Google.useAuthRequest(config, {
-    scheme: "myapp",
-    path: "/(main)",
-  });
   // const redirectUri = makeRedirectUri({
   //   scheme: 'my-scheme',
   //   path: 'redirect'
@@ -95,24 +91,8 @@ export default function LoginScreen() {
     } catch (error) {}
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {}
-  };
 
-  const handleToken = () => {
-    if (response?.type === "success") {
-      const { authentication } = response;
-      const token = authentication?.accessToken;
-      console.log("access token = ", token);
-      console.log("authentication token = ", authentication);
-    }
-  };
-
-  useEffect(() => {
-    handleToken();
-  }, [response]);
+ 
 
   return (
     <Box className="flex-1 bg-gray-100 p-5 justify-center">

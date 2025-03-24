@@ -15,6 +15,7 @@ import { auth, db } from "@/firebase";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { AuthSessionResult } from "expo-auth-session/build/AuthSession.types";
 import { TokenResponse } from "expo-auth-session/build/TokenRequest";
+import { dkmhTdmuService, SessionDKMH } from "@/service/dkmhTdmuService";
 
 type User = {
   uid: string;
@@ -23,7 +24,10 @@ type User = {
   photoURL: string | null;
 };
 
-type TSession = TokenResponse | null;
+type TSession = {
+  sessionDKMH: SessionDKMH;
+  sessionAPP: TokenResponse | null;
+} | null;
 
 type AuthContextType = {
   user: User | null;
@@ -96,16 +100,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    if (response?.type === "success") {
-      setSession(response.authentication);
-      const { id_token } = response.params;
+    async function fetchSession() {
+      if (response?.type === "success") {
+        const { authentication } = response;
+        const dkmhRes = await dkmhTdmuService.login(
+          authentication?.accessToken ?? ""
+        );
 
-      const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential)
-        .catch((error: any) => {
+        if (dkmhRes.status === 500) {
+          setError(dkmhRes.message);
+          return;
+        }
+
+        setSession({
+          sessionAPP: authentication,
+          sessionDKMH: dkmhRes.payload,
+        });
+
+      
+        const { id_token } = response.params;
+
+        const credential = GoogleAuthProvider.credential(id_token);
+        signInWithCredential(auth, credential).catch((error: any) => {
           setError(error.message);
         });
+      }
     }
+    fetchSession();
   }, [response]);
 
   const signIn = async (email: string, password: string) => {
