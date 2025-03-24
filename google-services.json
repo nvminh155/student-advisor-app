@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:331906216455:android:898e183dc7b97aad2570a2",
+        "mobilesdk_app_id": "1:331906216455:android:cb8eb898bcd7bf482570a2",
         "android_client_info": {
-          "package_name": "com.studentAdvisorApp"
+          "package_name": "com.minhrxpo1505.studentadvisorapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "331906216455-vg6ai1ev6p2aavim27ca9579eh68deoc.apps.googleusercontent.com",
+          "client_id": "331906216455-ag0uacki4of520v2peqvuet0h8r2ifn7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.studentAdvisorApp",
+            "package_name": "com.minhrxpo1505.studentadvisorapp",
             "certificate_hash": "7cbf8658cd3722f44fdc2bb3be6239b293b8d251"
           }
         },
