@@ -109,6 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } else if (error.code === "auth/invalid-email") {
         errorMessage = "Invalid email format";
       }
+      console.error('err', error)
       setError(errorMessage);
       throw error;
     } finally {

@@ -12,7 +12,20 @@
           "package_name": "com.studentAdvisorApp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "331906216455-vg6ai1ev6p2aavim27ca9579eh68deoc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studentAdvisorApp",
+            "certificate_hash": "7cbf8658cd3722f44fdc2bb3be6239b293b8d251"
+          }
+        },
+        {
+          "client_id": "331906216455-ihtpkum65rbdn4l3e927j0b3sklr5cau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD860MBEw6s5NvK79RNCdPWR-T1UvQGvFs"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "331906216455-ihtpkum65rbdn4l3e927j0b3sklr5cau.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "331906216455-aldbo3s2g57pj9vkel1t6nih99p0bjbh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.studentAdvisorApp"
+              }
+            }
+          ]
         }
       }
     }
