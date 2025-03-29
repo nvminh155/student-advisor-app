@@ -57,6 +57,7 @@ export default function ScheduleScreen() {
   useEffect(() => {
     const getPushToken = async () => {
       const token = await registerForPushNotificationsAsync();
+      console.log(token)
       setPushToken(token);
     };
     getPushToken();
