@@ -35,7 +35,6 @@ import {
   ToastDescription,
   useToast,
 } from "@/components/ui/toast";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native";
