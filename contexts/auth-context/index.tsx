@@ -25,7 +25,6 @@ type User = {
 };
 
 type TSession = {
-  sessionDKMH: SessionDKMH;
   sessionAPP: TokenResponse | null;
 } | null;
 
@@ -103,18 +102,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     async function fetchSession() {
       if (response?.type === "success") {
         const { authentication } = response;
-        const dkmhRes = await dkmhTdmuService.login(
-          authentication?.accessToken ?? ""
-        );
-
-        if (dkmhRes.status === 500) {
-          setError(dkmhRes.message);
-          return;
-        }
-
+        
+        console.log("authentication", authentication);
         setSession({
           sessionAPP: authentication,
-          sessionDKMH: dkmhRes.payload,
         });
 
       
