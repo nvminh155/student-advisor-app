@@ -6,7 +6,7 @@ import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { FormControl, FormControlLabel } from "@/components/ui/form-control";
 import { Input, InputField } from "@/components/ui/input";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { Divider } from "@/components/ui/divider";
@@ -21,21 +21,18 @@ import {
   useToast,
 } from "@/components/ui/toast";
 
-import { Redirect, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/auth-context";
 
-import { auth } from "@/firebase";
-import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
-import * as GoogleAuthProvider from "firebase/auth";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const config = {
-  androidClientId:
-    "331906216455-ag0uacki4of520v2peqvuet0h8r2ifn7.apps.googleusercontent.com",
-  scopes: ["profile", "email", "openid"],
-};
+// const config = {
+//   androidClientId:
+//     "331906216455-ag0uacki4of520v2peqvuet0h8r2ifn7.apps.googleusercontent.com",
+//   scopes: ["profile", "email", "openid"],
+// };
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -90,9 +87,6 @@ export default function LoginScreen() {
       router.push("/(main)");
     } catch (error) {}
   };
-
-
- 
 
   return (
     <Box className="flex-1 bg-gray-100 p-5 justify-center">

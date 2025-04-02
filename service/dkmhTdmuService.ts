@@ -1,9 +1,8 @@
 import { env } from "@/config/env";
 import { http } from "@/lib/http";
+import { TTkbtuanusertheohockyPayload } from "@/types/dkmh";
 
 const DKMH_TDMU_PATH = "/dkmhtdmu";
-
-
 
 export interface SessionDKMH {
   access_token: string;
@@ -25,10 +24,8 @@ export interface SessionDKMH {
   ".issued": string;
 }
 
-
 export const dkmhTdmuService = {
   login: async (access_token: string) => {
-
     return await http.post<SessionDKMH>(
       `${DKMH_TDMU_PATH}/login`,
       { access_token },
@@ -38,12 +35,12 @@ export const dkmhTdmuService = {
     );
   },
   tkbtuanhocky: async (access_token: string) => {
-    return await http.post(
+    return await http.post<TTkbtuanusertheohockyPayload>(
       `${DKMH_TDMU_PATH}/tkbtuanhocky`,
       { access_token },
       {
         baseUrl: env.BASE_URL_NODE_SERVER,
       }
     );
-  }
+  },
 };

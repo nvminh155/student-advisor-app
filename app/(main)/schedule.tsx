@@ -3,10 +3,7 @@
 import { useState, useEffect } from "react";
 
 import { Calendar } from "react-native-calendars";
-import {
-  scheduleNotification,
-  registerForPushNotificationsAsync,
-} from "@/service/notification-service";
+import { scheduleNotification } from "@/service/notification-service";
 
 import {
   getUserEvents,
@@ -19,7 +16,12 @@ import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import {
+  Button,
+  ButtonGroup,
+  ButtonIcon,
+  ButtonText,
+} from "@/components/ui/button";
 import { Icon, SearchIcon } from "@/components/ui/icon";
 import { ScrollView } from "react-native";
 import { Text } from "@/components/ui/text";
@@ -31,6 +33,17 @@ import {
   useToast,
 } from "@/components/ui/toast";
 import { useNotification } from "@/contexts/notification-context";
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@/components/ui/modal";
+import { FormControl, FormControlLabel } from "@/components/ui/form-control";
+import { Input, InputField } from "@/components/ui/input";
+import { Select, SelectItem } from "@/components/ui/select";
 
 export default function ScheduleScreen() {
   const { expoPushToken, notification, error } = useNotification();
@@ -358,6 +371,135 @@ export default function ScheduleScreen() {
           </ScrollView>
         </VStack>
       </VStack>
+
+      <Modal
+        isOpen={showAddModal}
+        onClose={() => {
+          setShowAddModal(false);
+          resetForm();
+        }}
+      >
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>
+            <Text>{isEditing ? "Edit Event" : "Add New Event"}</Text>
+          </ModalHeader>
+          <ModalBody>
+            <VStack space="md">
+              <FormControl>
+                <FormControlLabel><Text>Title</Text></FormControlLabel>
+                <Input>
+                  <InputField
+                    placeholder="Event title"
+                    value={newEvent.title}
+                    onChangeText={(text) =>
+                      setNewEvent({ ...newEvent, title: text })
+                    }
+                  />
+                </Input>
+              </FormControl>
+
+              <FormControl>
+                <FormControlLabel>
+                  <Text>Description</Text>
+                </FormControlLabel>
+                <Input>
+                  <InputField
+                    placeholder="Event description"
+                    value={newEvent.description}
+                    onChangeText={(text) =>
+                      setNewEvent({ ...newEvent, description: text })
+                    }
+                  />
+                </Input>
+              </FormControl>
+
+              <FormControl>
+                <FormControlLabel>
+                  <Text>Date</Text>
+                </FormControlLabel>
+                <Input>
+                  <InputField
+                    placeholder="YYYY-MM-DD"
+                    value={newEvent.date}
+                    onChangeText={(text) =>
+                      setNewEvent({ ...newEvent, date: text })
+                    }
+                  />
+                </Input>
+              </FormControl>
+
+              <HStack space="md">
+                <FormControl className="flex-1">
+                  <FormControlLabel>
+                    <Text>Start Time</Text>
+                  </FormControlLabel>
+                  <Input>
+                    <InputField
+                      placeholder="HH:MM"
+                      value={newEvent.startTime}
+                      onChangeText={(text) =>
+                        setNewEvent({ ...newEvent, startTime: text })
+                      }
+                    />
+                  </Input>
+                </FormControl>
+
+                <FormControl className="flex-1">
+                  <FormControlLabel>
+                    <Text>End Time</Text>
+                  </FormControlLabel>
+                  <Input>
+                    <InputField
+                      placeholder="HH:MM"
+                      value={newEvent.endTime}
+                      onChangeText={(text) =>
+                        setNewEvent({ ...newEvent, endTime: text })
+                      }
+                    />
+                  </Input>
+                </FormControl>
+              </HStack>
+
+              <FormControl>
+                <FormControlLabel>
+                  <Text>Event Type</Text>
+                </FormControlLabel>
+                <Select
+                  selectedValue={newEvent.type}
+                  onValueChange={(value) =>
+                    setNewEvent({ ...newEvent, type: value })
+                  }
+                >
+                  <SelectItem label="Personal" value="personal" />
+                  <SelectItem label="Class" value="class" />
+                </Select>
+              </FormControl>
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <ButtonGroup space="md">
+              <Button
+                variant="outline"
+                onPress={() => {
+                  setShowAddModal(false);
+                  resetForm();
+                }}
+                isDisabled={isLoading}
+              >
+                <ButtonText>Cancel</ButtonText>
+              </Button>
+              <Button
+                onPress={handleAddEvent}
+                // isLoading={isLoading}
+                isDisabled={isLoading}
+              >
+               <ButtonText> {isEditing ? "Update" : "Add"}</ButtonText>
+              </Button>
+            </ButtonGroup>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

@@ -9,6 +9,18 @@ import { NotificationProvider } from "@/contexts/notification-context";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from "react-native-reanimated";
+import { ToastProvider } from "@gluestack-ui/toast";
+
+// This is the default configuration
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false, // Reanimated runs in strict mode by default
+});
+
 const queryClient = new QueryClient();
 
 Notifications.setNotificationHandler({
@@ -38,20 +50,21 @@ Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
 
-
 export default function RootLayout() {
   return (
     <GluestackUIProvider mode="light">
       <QueryClientProvider client={queryClient}>
-        <NotificationProvider>
-          <AuthProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            />
-          </AuthProvider>
-        </NotificationProvider>
+        <ToastProvider>
+          <NotificationProvider>
+            <AuthProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              />
+            </AuthProvider>
+          </NotificationProvider>
+        </ToastProvider>
       </QueryClientProvider>
     </GluestackUIProvider>
   );
